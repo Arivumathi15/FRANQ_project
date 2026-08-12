@@ -94,9 +94,14 @@ class Pipeline:
         # Snapshot correctness state before touching anything (for correction-regret).
         before_values = {f.key(): f.value for f in facts}
 
-        # Pillar 3: budget-bounded targeted correction of flagged facts.
+        # Pillar 3: budget-bounded targeted correction of flagged facts. The corrector is
+        # given a DEEPER, focused retrieval pool (the full article) than the short snippet the
+        # answer was generated from — otherwise it would just regenerate the same value. Falls
+        # back to the generation contexts when no separate correction corpus is provided.
         records: list[CorrectionRecord] = []
         if self.cfg.correction.enabled:
+            corr_corpus = example.correction_contexts or example.contexts
+            retriever.index(corr_corpus)
             corrector = Corrector(self.llm, retriever, self.scorer, self.cfg.correction)
             records = corrector.correct_flagged(facts)
 

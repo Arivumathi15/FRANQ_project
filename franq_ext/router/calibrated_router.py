@@ -23,9 +23,19 @@ class CalibratedRouter:
         self.model = None
         self._prior = 0.5  # fallback error rate before training
 
+    @staticmethod
+    def _balanced_weights(y: np.ndarray) -> np.ndarray:
+        """Class-balanced sample weights so a skewed label distribution (common on hard QA,
+        where most generated facts are wrong) can't collapse the base learner to a constant."""
+        classes = np.array([0, 1])
+        freq = np.array([(y == c).mean() for c in classes])
+        weight_for = {c: (0.5 / f if f > 0 else 0.0) for c, f in zip(classes, freq)}
+        return np.array([weight_for[c] for c in y])
+
     def fit(self, X, y) -> "CalibratedRouter":
         from sklearn.calibration import CalibratedClassifierCV
         from sklearn.ensemble import GradientBoostingClassifier
+        from sklearn.model_selection import train_test_split
 
         X = np.asarray(X, dtype=float)
         y = np.asarray(y, dtype=int)
@@ -34,21 +44,32 @@ class CalibratedRouter:
             # Degenerate: only one class seen. Keep the prior; skip fitting.
             self.model = None
             return self
+
+        n_min = int(np.bincount(y).min())
         base = GradientBoostingClassifier(
             n_estimators=100, max_depth=2, random_state=self.cfg.seed
         )
-        n_min = int(np.bincount(y).min())
-        cv = max(2, min(3, n_min))
-        # Class-balanced sample weights so a skewed label distribution (common on hard QA,
-        # where most generated facts are wrong) can't collapse the router to a constant.
-        classes = np.array([0, 1])
-        freq = np.array([(y == c).mean() for c in classes])
-        weight_for = {c: (0.5 / f if f > 0 else 0.0) for c, f in zip(classes, freq)}
-        sample_weight = np.array([weight_for[c] for c in y])
-        self.model = CalibratedClassifierCV(
-            base, method=self.cfg.router.calibration, cv=cv
-        )
-        self.model.fit(X, y, sample_weight=sample_weight)
+        # KEY calibration fix: class-balancing (via sample_weight) must touch only the BASE
+        # learner, never the calibration step. Reweighting the calibrator distorts the very
+        # probabilities it is meant to make faithful to the true base rate — that was inflating
+        # ECE above the fixed-rule baseline. So we fit the base on balanced data, then calibrate
+        # on an UNWEIGHTED held-out split (cv="prefit"), which sees the real class frequency.
+        if n_min >= 4 and len(y) >= 20:
+            X_tr, X_cal, y_tr, y_cal = train_test_split(
+                X, y, test_size=0.3, random_state=self.cfg.seed, stratify=y
+            )
+            base.fit(X_tr, y_tr, sample_weight=self._balanced_weights(y_tr))
+            cal = CalibratedClassifierCV(base, method=self.cfg.router.calibration, cv="prefit")
+            cal.fit(X_cal, y_cal)  # NO sample_weight -> honest calibration
+            self.model = cal
+        else:
+            # Too small for a held-out calibration split: fall back to cross-val calibration,
+            # still unweighted so the probabilities stay calibrated to the true frequency.
+            cv = max(2, min(3, n_min))
+            self.model = CalibratedClassifierCV(
+                base, method=self.cfg.router.calibration, cv=cv
+            )
+            self.model.fit(X, y)
         return self
 
     def predict_error_prob(self, X) -> np.ndarray:

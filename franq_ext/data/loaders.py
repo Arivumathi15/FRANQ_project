@@ -105,20 +105,38 @@ def load_popqa_structured(n: int | None = 300, seed: int = 13,
         multi = multi[:n]
 
     examples = []
+    n_with_ctx = n_with_corr = 0
     for i, (subj, g) in enumerate(multi):
         gold_facts = [(subj, prop, obj) for prop, obj in g["facts"].items()]
         contexts: list[str] = []
+        correction_contexts: list[str] = []
         if with_contexts:
-            from franq_ext.data.wiki_context import get_context
+            from franq_ext.data.wiki_context import get_context, get_full_context
+            # Generation sees the short lead; correction (Pillar 3) may search the full article.
             contexts = get_context(g["title"])
+            correction_contexts = get_full_context(g["title"])
+        n_with_ctx += 1 if contexts else 0
+        n_with_corr += 1 if correction_contexts else 0
         examples.append(
             Example(
                 qid=f"popqa-struct-{i}",
                 question=f"Facts about {subj}",
                 gold_answer="; ".join(f"{p}={o}" for p, o in g["facts"].items()),
                 contexts=contexts,
+                correction_contexts=correction_contexts,
                 gold_facts=gold_facts,
             )
+        )
+    if with_contexts and examples:
+        # Coverage diagnostic: if these are ~0, the Wikipedia fetch is being blocked and the
+        # low factual accuracy is a data problem, not a model problem.
+        avg_ctx = sum(len(e.contexts) for e in examples) / len(examples)
+        avg_corr = sum(len(e.correction_contexts) for e in examples) / len(examples)
+        print(
+            f"[popqa_structured] context coverage: "
+            f"lead {n_with_ctx}/{len(examples)} (avg {avg_ctx:.1f} passages), "
+            f"full-article {n_with_corr}/{len(examples)} (avg {avg_corr:.1f} passages)",
+            flush=True,
         )
     return examples
 

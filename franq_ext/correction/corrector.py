@@ -43,34 +43,39 @@ class Corrector:
         old_faith = fact.faithfulness if fact.faithfulness is not None else 0.0
         best_value, best_faith = old_value, old_faith
         attempts = 0
+        accepted = False
 
-        # Budget-bounded: attempt i inspects the top-(i+1) retrieved passages.
+        # Budget-bounded: attempt i inspects the top-(i+1) retrieved passages of the
+        # correction corpus (a deeper pool than the snippet the answer was generated from).
         hits = self.retriever.retrieve(query, top_k=self.cfg.budget)
         for i in range(min(self.cfg.budget, max(len(hits), 1))):
             attempts += 1
             evidence_passages = [h[0] for h in hits[: i + 1]]
             evidence = "\n".join(evidence_passages)
             candidate = self.llm.answer_attribute(fact.entity, fact.attribute, evidence).strip()
-            if not candidate:
+            # Nothing to do if the deeper search reproduces the same value.
+            if not candidate or candidate.lower() == old_value.lower():
                 continue
             cand_faith = self.scorer.score_claim(
                 fact.entity, fact.attribute, candidate, evidence_passages
             )
             if self.cfg.safety_checked:
-                # Accept only a strictly better-supported, above-threshold value.
-                improved = cand_faith > best_faith and cand_faith >= self.cfg.flag_threshold
+                # Score the OLD value against the SAME evidence, so the comparison is fair:
+                # only replace when the new value is BETTER supported here AND clears the
+                # threshold. This fair comparison is what keeps correction-regret low —
+                # a correct old value present in the evidence won't be overwritten.
+                old_on_ev = self.scorer.score_claim(
+                    fact.entity, fact.attribute, old_value, evidence_passages
+                )
+                accept_this = cand_faith > old_on_ev and cand_faith >= self.cfg.flag_threshold
             else:
-                # Reckless: accept any different candidate (no safety guard).
-                improved = candidate.lower() != old_value.lower()
-            if improved:
-                best_value, best_faith = candidate, cand_faith
-                if candidate.lower() != old_value.lower():
-                    break  # found a replacement; stop early to respect budget
+                # Reckless: accept any different candidate (no safety guard). This is the
+                # ablation that exposes what correction-regret is designed to catch.
+                accept_this = True
+            if accept_this:
+                best_value, best_faith, accepted = candidate, cand_faith, True
+                break  # found a replacement; stop early to respect budget
 
-        if self.cfg.safety_checked:
-            accepted = best_value.lower() != old_value.lower() and best_faith > old_faith
-        else:
-            accepted = best_value.lower() != old_value.lower()
         if accepted:
             fact.original_value = old_value
             fact.value = best_value

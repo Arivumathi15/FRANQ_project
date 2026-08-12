@@ -44,6 +44,13 @@ class Example:
     question: str
     gold_answer: str
     contexts: list[str] = field(default_factory=list)   # retrieved evidence passages
+    # A SEPARATE, richer evidence pool used ONLY by the targeted-correction loop (Pillar 3).
+    # The initial answer is generated from `contexts` (a short RAG snippet); correction is
+    # allowed a deeper, focused retrieval over `correction_contexts` (e.g. the full article).
+    # Keeping them distinct is what gives correction something new to find — reusing the same
+    # snippet would just regenerate the same (possibly wrong) value. Empty -> falls back to
+    # `contexts`.
+    correction_contexts: list[str] = field(default_factory=list)
     # Ground-truth facts, as (entity, attribute, value). Used to score correctness
     # and to compute correction-regret.
     gold_facts: list[tuple[str, str, str]] = field(default_factory=list)
