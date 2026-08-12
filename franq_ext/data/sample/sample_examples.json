@@ -1,0 +1,45 @@
+[
+  {
+    "qid": "einstein",
+    "question": "Where and when was Albert Einstein born?",
+    "gold_answer": "Albert Einstein was born in 1879 in Ulm.",
+    "generated_answer": "Einstein was born in 1879 in Munich.",
+    "gold_facts": [
+      ["Einstein", "birth year", "1879"],
+      ["Einstein", "birth city", "Ulm"]
+    ],
+    "contexts": [
+      "Albert Einstein was born on 14 March 1879 in Ulm, in the Kingdom of Wurttemberg in the German Empire.",
+      "The Einstein family moved to Munich in 1880, where his father founded a company; Einstein himself was not born there.",
+      "Einstein is best known for developing the theory of relativity in physics."
+    ]
+  },
+  {
+    "qid": "curie",
+    "question": "Where and when was Marie Curie born?",
+    "gold_answer": "Marie Curie was born in 1867 in Warsaw.",
+    "generated_answer": "Curie was born in 1867 in Warsaw.",
+    "gold_facts": [
+      ["Curie", "birth year", "1867"],
+      ["Curie", "birth city", "Warsaw"]
+    ],
+    "contexts": [
+      "Marie Curie was born on 7 November 1867 in Warsaw, in what was then the Kingdom of Poland.",
+      "Marie Curie conducted pioneering research on radioactivity in physics and chemistry."
+    ]
+  },
+  {
+    "qid": "newton",
+    "question": "Where and when was Isaac Newton born?",
+    "gold_answer": "Isaac Newton was born in 1643 in Woolsthorpe.",
+    "generated_answer": "Newton was born in 1642 in Woolsthorpe.",
+    "gold_facts": [
+      ["Newton", "birth year", "1643"],
+      ["Newton", "birth city", "Woolsthorpe"]
+    ],
+    "contexts": [
+      "Isaac Newton was born on 4 January 1643 in Woolsthorpe-by-Colsterworth, Lincolnshire, England.",
+      "Newton formulated the laws of motion and universal gravitation."
+    ]
+  }
+]
