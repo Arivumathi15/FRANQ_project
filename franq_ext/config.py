@@ -56,6 +56,11 @@ class RouterConfig:
     # FRANQ fixed rule: if AlignScore faithfulness < this, trust semantic-entropy UQ;
     # otherwise trust token-probability UQ.
     fixed_faithful_threshold: float = 0.5
+    # Error-probability above which a fact is FLAGGED for correction. Kept SEPARATE from the
+    # correction acceptance bar (CorrectionConfig.flag_threshold): flagging can be generous
+    # (catch more wrong facts to attempt) while acceptance stays strict (only replace when the
+    # new value is genuinely better-supported). Lower -> flags more -> more correction attempts.
+    flag_threshold: float = 0.35
 
 
 @dataclass

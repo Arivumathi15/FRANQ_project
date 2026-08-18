@@ -13,7 +13,7 @@ def build_router(cfg):
     if cfg.router.kind == "fixed":
         return FixedRuleRouter(
             faithful_threshold=cfg.router.fixed_faithful_threshold,
-            flag_threshold=cfg.correction.flag_threshold,
+            flag_threshold=cfg.router.flag_threshold,
         )
     return CalibratedRouter(cfg)
 

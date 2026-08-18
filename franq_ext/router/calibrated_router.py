@@ -59,7 +59,18 @@ class CalibratedRouter:
                 X, y, test_size=0.3, random_state=self.cfg.seed, stratify=y
             )
             base.fit(X_tr, y_tr, sample_weight=self._balanced_weights(y_tr))
-            cal = CalibratedClassifierCV(base, method=self.cfg.router.calibration, cv="prefit")
+            # Calibrate the ALREADY-FITTED base on the held-out split without refitting it.
+            # sklearn >=1.6 does this via FrozenEstimator; older versions use cv="prefit"
+            # (deprecated in 1.6, removed in 1.8) — support both so the code survives upgrades.
+            try:
+                from sklearn.frozen import FrozenEstimator
+                cal = CalibratedClassifierCV(
+                    FrozenEstimator(base), method=self.cfg.router.calibration
+                )
+            except ImportError:
+                cal = CalibratedClassifierCV(
+                    base, method=self.cfg.router.calibration, cv="prefit"
+                )
             cal.fit(X_cal, y_cal)  # NO sample_weight -> honest calibration
             self.model = cal
         else:

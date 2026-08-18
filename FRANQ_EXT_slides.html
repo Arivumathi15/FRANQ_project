@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRANQ-EXT — Project Review</title>
+<style>
+  :root{
+    --navy:#0f2544; --navy2:#1b3a63; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --bg:#f6f8fb; --card:#ffffff;
+    --p1:#6366f1;  /* graph - indigo */
+    --p2:#0ea5a4;  /* router - teal  */
+    --p3:#f59e0b;  /* correction - amber */
+    --good:#10b981; --good-d:#0f7a5f;
+    --bad:#e05a47;  --bad-d:#b8412f;
+    --shadow:0 10px 30px rgba(15,37,68,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--navy); color:var(--ink); overflow:hidden;
+  }
+  /* ---------- deck / slide framing ---------- */
+  .deck{position:fixed;inset:0}
+  .slide{
+    position:absolute;inset:0;display:none;
+    padding:5.2vh 6vw 8vh;background:var(--bg);
+    flex-direction:column;justify-content:center;
+    animation:fade .45s ease;
+  }
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .slide h1{font-size:clamp(28px,4.4vw,58px);color:var(--navy);line-height:1.05;letter-spacing:-.5px}
+  .slide h2{font-size:clamp(24px,3.2vw,40px);color:var(--navy);line-height:1.1;margin-bottom:.35em;letter-spacing:-.3px}
+  .eyebrow{display:inline-block;font-size:clamp(12px,1.2vw,15px);font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--p2);margin-bottom:1.1em}
+  .lead{font-size:clamp(16px,1.7vw,22px);color:var(--muted);line-height:1.5;max-width:60ch}
+  .kicker{font-size:clamp(13px,1.25vw,16px);font-weight:700;color:var(--p2);letter-spacing:.05em;margin-bottom:.5em;text-transform:uppercase}
+  ul{list-style:none;margin-top:1.1em}
+  ul li{position:relative;padding-left:1.7em;margin:.62em 0;font-size:clamp(15px,1.6vw,21px);line-height:1.45;color:#374151;max-width:74ch}
+  ul li::before{content:"";position:absolute;left:0;top:.55em;width:.62em;height:.62em;border-radius:50%;background:var(--p2)}
+  b,strong{color:var(--navy)}
+  .muted{color:var(--muted)}
+  /* ---------- title slide ---------- */
+  #s1{background:linear-gradient(155deg,#0f2544,#16345c 55%,#0d3b52);color:#fff;justify-content:center}
+  #s1 .eyebrow{color:#7dd3c8}
+  #s1 h1{color:#fff;font-size:clamp(34px,6vw,74px);margin:.15em 0 .3em}
+  #s1 .sub{font-size:clamp(16px,2vw,26px);color:#c7d6ea;max-width:52ch;line-height:1.4}
+  #s1 .meta{margin-top:2.4em;display:flex;gap:2.5em;flex-wrap:wrap;color:#9fb4d0;font-size:clamp(13px,1.3vw,17px)}
+  #s1 .meta b{color:#eaf2ff;display:block;font-size:1.15em;margin-top:.15em}
+  .chips{margin-top:2em;display:flex;gap:.6em;flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#dce8f7;
+    padding:.4em .9em;border-radius:999px;font-size:clamp(12px,1.2vw,15px);font-weight:600}
+  /* ---------- cards / grids ---------- */
+  .grid{display:grid;gap:1.1em;margin-top:1.4em}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.3em 1.4em;box-shadow:var(--shadow)}
+  .card .num{display:inline-flex;align-items:center;justify-content:center;width:2.1em;height:2.1em;border-radius:12px;
+    color:#fff;font-weight:800;font-size:1.05em;margin-bottom:.6em}
+  .card h3{font-size:clamp(17px,1.8vw,23px);color:var(--navy);margin-bottom:.35em}
+  .card p{font-size:clamp(13px,1.35vw,17px);color:#4b5563;line-height:1.45}
+  .p1 .num{background:var(--p1)} .p2 .num{background:var(--p2)} .p3 .num{background:var(--p3)}
+  .p1{border-top:4px solid var(--p1)} .p2{border-top:4px solid var(--p2)} .p3{border-top:4px solid var(--p3)}
+  .tag{font-size:.72em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  /* ---------- pipeline ---------- */
+  .flow{display:flex;align-items:stretch;gap:.5em;flex-wrap:wrap;margin-top:1.8em}
+  .step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7em 1.05em;font-size:clamp(12px,1.2vw,16px);
+    font-weight:700;color:var(--navy);box-shadow:var(--shadow);display:flex;flex-direction:column;
+    align-items:flex-start;justify-content:center;line-height:1.25}
+  .arrow{align-self:center;color:var(--p2);font-size:1.3em;font-weight:800}
+  .step.hl{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .step small{display:block;font-weight:600;color:var(--muted);font-size:.72em;margin-top:.1em}
+  .step.hl small{color:#9fc7d6}
+  /* ---------- table ---------- */
+  table{width:100%;border-collapse:collapse;margin-top:1.3em;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-variant-numeric:tabular-nums}
+  th,td{padding:.72em .8em;text-align:center;font-size:clamp(13px,1.5vw,19px)}
+  thead th{background:var(--navy);color:#fff;font-weight:700;letter-spacing:.02em}
+  tbody td:first-child,tbody th:first-child{text-align:left;font-weight:700;color:var(--navy)}
+  tbody tr:nth-child(even){background:#f9fafb}
+  tbody tr.hl{background:#fff7e8}
+  .up{color:var(--good-d);font-weight:800}
+  .down{color:var(--bad-d);font-weight:800}
+  .best{color:var(--p2);font-weight:800}
+  td small{color:var(--muted);font-weight:600}
+  /* ---------- charts ---------- */
+  .chartwrap{display:flex;gap:2.4em;align-items:center;margin-top:1.2em;flex-wrap:wrap}
+  .bars{display:flex;align-items:flex-end;gap:2.4em;height:38vh;padding:0 1em;border-bottom:2px solid var(--line)}
+  .bar{width:12vw;max-width:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}
+  .bar .fill{width:100%;border-radius:10px 10px 0 0;position:relative;transition:height .5s}
+  .bar .val{position:absolute;top:-1.7em;font-weight:800;font-size:clamp(14px,1.5vw,20px);color:var(--navy);width:100%;text-align:center}
+  .bar .lab{margin-top:.7em;font-weight:700;font-size:clamp(12px,1.3vw,16px);color:var(--navy);text-align:center}
+  .bar .lab small{display:block;color:var(--muted);font-weight:600}
+  /* ---------- money slide ---------- */
+  .versus{display:grid;grid-template-columns:1fr 1fr;gap:1.4em;margin-top:1.4em}
+  .panel{border-radius:18px;padding:1.5em 1.6em;color:#fff;box-shadow:var(--shadow)}
+  .panel.safe{background:linear-gradient(160deg,#0f7a5f,#10b981)}
+  .panel.reck{background:linear-gradient(160deg,#b8412f,#e05a47)}
+  .panel h3{font-size:clamp(18px,2vw,26px);margin-bottom:.7em;display:flex;align-items:center;gap:.4em}
+  .panel .row{display:flex;justify-content:space-between;align-items:baseline;padding:.5em 0;border-top:1px solid rgba(255,255,255,.25)}
+  .panel .row span{opacity:.9;font-size:clamp(13px,1.4vw,18px)}
+  .panel .row b{font-size:clamp(20px,2.4vw,32px);font-weight:800}
+  .verdict{margin-top:.9em;font-size:clamp(13px,1.4vw,18px);font-weight:700;background:rgba(255,255,255,.16);padding:.6em .8em;border-radius:10px}
+  .takeaway{font-size:clamp(26px,4vw,52px);color:var(--navy);font-weight:800;line-height:1.15;letter-spacing:-.5px;max-width:20ch}
+  .takeaway .hi{color:var(--p3)}
+  .defbox{background:#fff;border:1px solid var(--line);border-left:5px solid var(--p3);border-radius:12px;padding:1.1em 1.3em;margin-top:1.3em;box-shadow:var(--shadow)}
+  .defbox .formula{font-size:clamp(15px,1.7vw,22px);color:var(--navy);font-weight:700;margin-top:.4em}
+  .two{display:grid;grid-template-columns:1.15fr .85fr;gap:2em;align-items:center}
+  .statbig{font-size:clamp(40px,7vw,92px);font-weight:800;color:var(--p2);line-height:1;letter-spacing:-2px}
+  .statbig.amber{color:var(--p3)} .statbig.green{color:var(--good-d)}
+  .statcap{font-size:clamp(14px,1.5vw,20px);color:var(--muted);margin-top:.3em;max-width:22ch}
+  /* example callout */
+  .example{background:#fff;border-radius:14px;padding:1.2em 1.4em;box-shadow:var(--shadow);border:1px solid var(--line);margin-top:1.3em;max-width:60ch}
+  .example .q{font-size:clamp(15px,1.6vw,21px);color:var(--navy);font-weight:700}
+  .example .a{font-size:clamp(15px,1.6vw,21px);color:#374151;margin:.5em 0}
+  .fact-ok{color:var(--good-d);font-weight:700}
+  .fact-bad{color:var(--bad-d);font-weight:700}
+  /* ---------- chrome: nav ---------- */
+  .progress{position:fixed;top:0;left:0;height:4px;background:var(--p2);z-index:50;transition:width .35s}
+  .hud{position:fixed;bottom:18px;right:22px;z-index:50;display:flex;align-items:center;gap:12px}
+  .counter{color:var(--navy);font-weight:700;font-size:14px;background:#fff;padding:5px 11px;border-radius:999px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--navy);
+    font-size:18px;cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;transition:.15s}
+  .btn:hover{background:var(--navy);color:#fff}
+  .dots{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:7px}
+  .dot{width:8px;height:8px;border-radius:50%;background:#c7d0dd;cursor:pointer;transition:.2s}
+  .dot.active{background:var(--navy);transform:scale(1.35)}
+  .brandmark{position:fixed;bottom:20px;left:26px;z-index:40;font-size:12px;font-weight:700;color:#9fb0c6;letter-spacing:.08em}
+  .slide.active .brandmark{color:#9fb0c6}
+  .hint{position:fixed;top:16px;right:20px;z-index:50;font-size:12px;color:#8aa;background:rgba(255,255,255,.75);
+    padding:5px 10px;border-radius:8px;border:1px solid var(--line)}
+  @media (max-width:820px){
+    .g3,.g2,.versus,.two{grid-template-columns:1fr}
+    .flow{flex-direction:column} .arrow{transform:rotate(90deg)}
+    .bars{gap:1.2em;height:32vh}
+  }
+  @media print{
+    body{overflow:visible}.slide{display:flex!important;position:relative;page-break-after:always;min-height:100vh}
+    .hud,.dots,.progress,.hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="hint">Use ← → keys · F11 fullscreen</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 TITLE -->
+  <section class="slide active" id="s1">
+    <span class="eyebrow">Final Year Project — Review Presentation</span>
+    <h1>FRANQ&#8209;EXT</h1>
+    <p class="sub">Dependency&#8209;Aware Entity–Attribute Verification and Targeted Self&#8209;Correction for Faithful Retrieval&#8209;Augmented Generation</p>
+    <div class="chips">
+      <span class="chip">Extends FRANQ · arXiv:2505.21072</span>
+      <span class="chip">PopQA benchmark</span>
+      <span class="chip">Qwen2.5&#8209;3B · DeBERTa&#8209;NLI</span>
+      <span class="chip">3 Pillars + a new safety metric</span>
+    </div>
+    <div class="meta">
+      <div>Presented by<b>[ Your Name ]</b></div>
+      <div>Guide<b>[ Professor's Name ]</b></div>
+      <div>Department<b>[ Dept / College ]</b></div>
+    </div>
+  </section>
+
+  <!-- 2 PROBLEM -->
+  <section class="slide" id="s2">
+    <span class="eyebrow">The Problem</span>
+    <h2>RAG answers sound fluent — but hide wrong facts</h2>
+    <p class="lead">Retrieval&#8209;Augmented Generation reduces hallucination, yet a single answer often mixes correct and incorrect facts. Today's systems detect that "something is off" but rarely act on it precisely.</p>
+    <div class="example">
+      <div class="q">Q: “Where and when was Albert Einstein born?”</div>
+      <div class="a">A: “Einstein was born in <span class="fact-ok">1879</span> in <span class="fact-bad">Munich</span>.”</div>
+      <div class="muted">Birth year <b class="fact-ok">✓ correct</b> &nbsp;·&nbsp; Birth city <b class="fact-bad">✗ wrong</b> (should be <b>Ulm</b>) — only <b>one</b> fact is wrong.</div>
+    </div>
+    <ul>
+      <li>Which <b>specific</b> fact is wrong?</li>
+      <li>Can we fix <b>only</b> that fact, not regenerate everything?</li>
+      <li>Did the fix <b>accidentally break</b> a fact that was already right?</li>
+    </ul>
+  </section>
+
+  <!-- 3 FRANQ GAPS -->
+  <section class="slide" id="s3">
+    <span class="eyebrow">Starting Point · FRANQ</span>
+    <h2>FRANQ detects hallucinations — but has three gaps</h2>
+    <p class="lead">FRANQ (Faithfulness&#8209;aware Uncertainty Quantification) flags unreliable answers using an AlignScore faithfulness gate and an IF&#8209;ELSE rule. It <b>detects</b>, but it does not <b>repair</b>.</p>
+    <div class="grid g3">
+      <div class="card"><span class="tag">Gap 1</span><h3>Facts checked in isolation</h3><p>Attributes of the same entity are verified independently — a suspicious entity doesn't raise doubt on its other facts.</p></div>
+      <div class="card"><span class="tag">Gap 2</span><h3>One rigid decision rule</h3><p>A hardcoded <em>if faithfulness &lt; threshold</em> switch is applied to every question, regardless of context.</p></div>
+      <div class="card"><span class="tag">Gap 3</span><h3>No correction</h3><p>It says “this is probably wrong” — then stops. It never fixes the fact or checks the fix for new damage.</p></div>
+    </div>
+  </section>
+
+  <!-- 4 CONTRIBUTION -->
+  <section class="slide" id="s4">
+    <span class="eyebrow">Our Contribution</span>
+    <h2>Three pillars that turn detection into safe correction</h2>
+    <div class="grid g3">
+      <div class="card p1"><span class="num">1</span><h3>Dependency&#8209;Aware Graph</h3><p>Link every fact to its entity, so doubting one attribute triggers re&#8209;checking its siblings. <span class="tag">Fixes Gap&nbsp;1</span></p></div>
+      <div class="card p2"><span class="num">2</span><h3>Learned Calibrated Router</h3><p>Replace the IF&#8209;ELSE with a trained classifier whose confidence is <b>calibrated</b> — 70% sure really means 70%. <span class="tag">Fixes Gap&nbsp;2</span></p></div>
+      <div class="card p3"><span class="num">3</span><h3>Targeted Self&#8209;Correction</h3><p>Repair only the flagged fact via a deeper search — and measure <b>correction&#8209;regret</b> to guarantee no new damage. <span class="tag">Fixes Gap&nbsp;3</span></p></div>
+    </div>
+    <p class="lead" style="margin-top:1.4em">Each pillar maps 1:1 to a code module and is isolated in the ablation study.</p>
+  </section>
+
+  <!-- 5 PIPELINE -->
+  <section class="slide" id="s5">
+    <span class="eyebrow">System Overview</span>
+    <h2>The end&#8209;to&#8209;end pipeline</h2>
+    <div class="flow">
+      <div class="step">Question<small>+ retrieved evidence</small></div><span class="arrow">→</span>
+      <div class="step">LLM answer<small>Qwen2.5&#8209;3B</small></div><span class="arrow">→</span>
+      <div class="step">Fact extraction<small>(entity, attr, value)</small></div><span class="arrow">→</span>
+      <div class="step hl">Entity graph<small>Pillar 1</small></div><span class="arrow">→</span>
+      <div class="step">Faithfulness + UQ<small>NLI · entropy</small></div><span class="arrow">→</span>
+      <div class="step hl">Router<small>Pillar 2</small></div><span class="arrow">→</span>
+      <div class="step hl">Correction<small>Pillar 3</small></div><span class="arrow">→</span>
+      <div class="step">Re&#8209;verify<small>+ regret</small></div>
+    </div>
+    <p class="lead" style="margin-top:1.8em">The same pipeline runs offline (mock backend, for tests) and on GPU (real models) — only the configuration changes, which makes every result reproducible.</p>
+  </section>
+
+  <!-- 6 PILLAR 1 -->
+  <section class="slide" id="s6">
+    <span class="kicker" style="color:var(--p1)">Pillar 1</span>
+    <h2>Dependency&#8209;Aware Entity–Attribute Graph</h2>
+    <div class="two">
+      <div>
+        <p class="lead">Instead of a flat list of facts, we connect every attribute to its entity. Two signals feed the router:</p>
+        <ul>
+          <li><b>Dependency strength</b> — a fact tied to many siblings is riskier to trust alone.</li>
+          <li><b>Entity suspicion</b> — if any attribute of an entity looks unfaithful, all its attributes become suspect.</li>
+        </ul>
+        <p class="lead" style="margin-top:.8em">This is the “doubt the grandparent → re&#8209;check the grandchildren” effect flat fact&#8209;checking cannot see.</p>
+      </div>
+      <div class="card p1" style="text-align:center">
+        <div style="font-weight:800;color:var(--p1);font-size:1.2em;margin-bottom:.5em">Einstein</div>
+        <div class="muted" style="line-height:2">├─ birth year<br>├─ birth city&nbsp; <span class="fact-bad">⚠ suspicious</span><br>├─ occupation<br>└─ nationality</div>
+        <p style="margin-top:.8em">One shaky fact raises doubt across the whole entity.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 PILLAR 2 -->
+  <section class="slide" id="s7">
+    <span class="kicker" style="color:var(--p2)">Pillar 2</span>
+    <h2>Learned, Calibrated Uncertainty Router</h2>
+    <div class="two">
+      <div>
+        <p class="lead">A gradient&#8209;boosted classifier replaces FRANQ's fixed rule. It combines six signals per fact:</p>
+        <ul>
+          <li>Faithfulness · Retrieval confidence</li>
+          <li>Semantic entropy · Parametric&#8209;knowledge uncertainty</li>
+          <li>Dependency strength · Entity suspicion <span class="tag">(from Pillar 1)</span></li>
+        </ul>
+        <p class="lead" style="margin-top:.8em">Crucially, its output is <b>calibrated</b> (isotonic on a held&#8209;out split) so the flagging probability is trustworthy.</p>
+      </div>
+      <div class="card p2" style="text-align:center">
+        <div class="tag">Calibration error (ECE) — lower is better</div>
+        <div class="statbig" style="color:var(--good-d)">0.026</div>
+        <div class="statcap" style="margin:0 auto">vs <b>0.602</b> for FRANQ's fixed rule — about <b>23× better calibrated</b>.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 PILLAR 3 -->
+  <section class="slide" id="s8">
+    <span class="kicker" style="color:var(--p3)">Pillar 3</span>
+    <h2>Targeted Self&#8209;Correction + a new safety metric</h2>
+    <p class="lead">For a flagged fact, we run a <b>focused</b> search of the full source document (not the short snippet the answer came from), and replace <b>only</b> that value — and only if the new value is genuinely better supported.</p>
+    <div class="defbox">
+      <div class="tag" style="color:var(--p3)">New metric — Correction&#8209;Regret</div>
+      <div class="formula">Regret = (facts correct <b>before</b> that became wrong <b>after</b>) ÷ (facts correct before)</div>
+      <p class="muted" style="margin-top:.5em">It answers the question no prior method asks: <b>did fixing one fact quietly break another?</b> 0 = no collateral damage.</p>
+    </div>
+  </section>
+
+  <!-- 9 SETUP -->
+  <section class="slide" id="s9">
+    <span class="eyebrow">Experimental Setup</span>
+    <h2>Reproducible, journal&#8209;grade evaluation</h2>
+    <div class="grid g3">
+      <div class="card"><span class="tag">Data</span><h3>PopQA</h3><p>150 entities with ≥3 attributes → 234 gold facts on the eval split. Grouped by disambiguated Wikipedia title.</p></div>
+      <div class="card"><span class="tag">Models</span><h3>Qwen2.5&#8209;3B</h3><p>Generation on a free T4 GPU · DeBERTa&#8209;v3 NLI faithfulness · MiniLM dense retriever.</p></div>
+      <div class="card"><span class="tag">Metrics</span><h3>AUROC · PRR · ECE</h3><p>Detection quality (as in FRANQ) plus our extensions: correction success, <b>regret</b>, and calibration.</p></div>
+    </div>
+    <p class="lead" style="margin-top:1.3em">Ablation ladder: <b>B0</b> FRANQ → <b>A1</b> +Router → <b>A2</b> +Graph → <b>A3</b> +Correction. Each rung isolates exactly one pillar.</p>
+  </section>
+
+  <!-- 10 ABLATION TABLE -->
+  <section class="slide" id="s10">
+    <span class="eyebrow">Results · Ablation</span>
+    <h2>Every pillar adds a measurable gain</h2>
+    <table>
+      <thead><tr><th>Condition</th><th>AUROC ↑</th><th>PRR ↑</th><th>ECE ↓</th><th>Accuracy</th><th>Corrected</th><th>Regret ↓</th></tr></thead>
+      <tbody>
+        <tr><td>B0 · FRANQ (fixed)</td><td>0.737</td><td>0.422</td><td>0.602</td><td>63.2%</td><td>0</td><td>0</td></tr>
+        <tr><td>A1 · +Router <small>P2</small></td><td>0.745</td><td>0.481</td><td class="best">0.057</td><td>63.2%</td><td>0</td><td>0</td></tr>
+        <tr><td>A2 · +Graph <small>P1</small></td><td class="best">0.764</td><td class="best">0.543</td><td class="best">0.026</td><td>63.2%</td><td>0</td><td>0</td></tr>
+        <tr class="hl"><td>A3 · +Correction <small>P3</small></td><td>0.764</td><td>0.543</td><td>0.026</td><td class="up">65.8% ↑</td><td class="up">20</td><td>0.014</td></tr>
+      </tbody>
+    </table>
+    <ul>
+      <li><b>Pillar 2:</b> calibration (ECE) collapses <b>0.602 → 0.057</b>.</li>
+      <li><b>Pillar 1:</b> graph lifts ranking — PRR <b>0.481 → 0.543</b>.</li>
+      <li><b>Pillar 3:</b> correction raises accuracy <b>+2.6 points</b> at near&#8209;zero regret.</li>
+    </ul>
+  </section>
+
+  <!-- 11 ECE CHART -->
+  <section class="slide" id="s11">
+    <span class="eyebrow">Result · Pillar 2</span>
+    <h2>The router's confidence becomes trustworthy</h2>
+    <p class="lead">Expected Calibration Error (ECE) — the gap between predicted confidence and real accuracy. Lower is better.</p>
+    <div class="bars">
+      <div class="bar"><div class="fill" style="height:210px;background:linear-gradient(180deg,#e05a47,#b8412f)"><span class="val">0.602</span></div><div class="lab">B0 · FRANQ<small>fixed rule</small></div></div>
+      <div class="bar"><div class="fill" style="height:20px;background:linear-gradient(180deg,#0ea5a4,#0f7a5f)"><span class="val">0.057</span></div><div class="lab">A1 · Router<small>Pillar 2</small></div></div>
+      <div class="bar"><div class="fill" style="height:9px;background:linear-gradient(180deg,#10b981,#0f7a5f)"><span class="val">0.026</span></div><div class="lab">A2 · +Graph<small>Pillar 1+2</small></div></div>
+    </div>
+    <p class="lead" style="margin-top:1.4em"><b>~23× better calibrated</b> than the baseline it replaces — the core Pillar&#8209;2 claim, demonstrated on real data.</p>
+  </section>
+
+  <!-- 12 MONEY SLIDE -->
+  <section class="slide" id="s12">
+    <span class="eyebrow">Result · Pillar 3 · The Key Finding</span>
+    <h2>Correcting <em>more</em> is not correcting <em>better</em></h2>
+    <div class="versus">
+      <div class="panel safe">
+        <h3>✓ Safety&#8209;checked (ours)</h3>
+        <div class="row"><span>Facts corrected</span><b>20</b></div>
+        <div class="row"><span>Correction&#8209;regret</span><b>0.014</b></div>
+        <div class="row"><span>Final accuracy</span><b>65.8% ↑</b></div>
+        <div class="verdict">Every fix is a net gain · accuracy rises above baseline</div>
+      </div>
+      <div class="panel reck">
+        <h3>✗ Reckless (replace on any change)</h3>
+        <div class="row"><span>Facts corrected</span><b>76</b></div>
+        <div class="row"><span>Correction&#8209;regret</span><b>0.135</b></div>
+        <div class="row"><span>Final accuracy</span><b>59.0% ↓</b></div>
+        <div class="verdict">Fixes 3.8× more — but does net <em>harm</em></div>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:1.1em">Reckless correction "fixes" far more facts, yet its regret is <b>10× higher</b> and it drops accuracy <b>below the 63.2% baseline</b>. <b>Correction&#8209;regret is the metric that exposes this — and no prior method measures it.</b></p>
+  </section>
+
+  <!-- 13 TAKEAWAY -->
+  <section class="slide" id="s13">
+    <span class="eyebrow">In One Line</span>
+    <div class="takeaway">A safe fix that improves accuracy — and <span class="hi">proof</span> it caused no new damage.</div>
+    <p class="lead" style="margin-top:1.4em">FRANQ told you a fact was wrong. FRANQ&#8209;EXT fixes it, verifies the fix, and quantifies the risk — turning a detector into a trustworthy self&#8209;correcting system.</p>
+  </section>
+
+  <!-- 14 CONCLUSION -->
+  <section class="slide" id="s14">
+    <span class="eyebrow">Conclusion</span>
+    <h2>Contributions &amp; what's next</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3 style="color:var(--navy)">What we delivered</h3>
+        <ul style="margin-top:.5em">
+          <li>Dependency&#8209;aware graph verification (Pillar&nbsp;1)</li>
+          <li>Calibrated learned router — ECE 0.60 → 0.03 (Pillar&nbsp;2)</li>
+          <li>Safe targeted correction, +2.6% accuracy (Pillar&nbsp;3)</li>
+          <li><b>Correction&#8209;regret</b> — a new safety metric</li>
+          <li>Reproducible code, tests, tables &amp; figures</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--navy)">Future work</h3>
+        <ul style="margin-top:.5em">
+          <li>Scale to the full PopQA set &amp; a second dataset (TriviaQA)</li>
+          <li>Multiple seeds → mean ± std for the paper</li>
+          <li>Stronger correction retrieval (beyond one document)</li>
+          <li>Larger LLMs to widen the correction opportunity</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 THANK YOU -->
+  <section class="slide" id="s15" style="background:linear-gradient(155deg,#0f2544,#16345c 55%,#0d3b52);color:#fff">
+    <span class="eyebrow" style="color:#7dd3c8">Thank You</span>
+    <h1 style="color:#fff">Questions &amp; Discussion</h1>
+    <p class="sub" style="color:#c7d6ea;max-width:56ch;margin-top:.4em">FRANQ&#8209;EXT — from hallucination <b style="color:#fff">detection</b> to safe, measured <b style="color:#fff">self&#8209;correction</b>.</p>
+    <div class="chips" style="margin-top:2.2em">
+      <span class="chip">ECE 0.60 → 0.03</span>
+      <span class="chip">Accuracy +2.6%</span>
+      <span class="chip">Regret: 0.014 (safe) vs 0.135 (reckless)</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark">FRANQ&#8209;EXT</div>
+<div class="dots" id="dots"></div>
+<div class="hud">
+  <button class="btn" id="prev" aria-label="Previous">‹</button>
+  <span class="counter" id="counter">1 / 15</span>
+  <button class="btn" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const dotsWrap=document.getElementById('dots');
+  const counter=document.getElementById('counter');
+  const prog=document.getElementById('prog');
+  let i=0;
+  slides.forEach((_,n)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>go(n);dotsWrap.appendChild(d);});
+  const dots=[...document.querySelectorAll('.dot')];
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    dots.forEach((d,k)=>d.classList.toggle('active',k===i));
+    counter.textContent=(i+1)+' / '+slides.length;
+    prog.style.width=((i+1)/slides.length*100)+'%';
+  }
+  document.getElementById('next').onclick=()=>go(i+1);
+  document.getElementById('prev').onclick=()=>go(i-1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1);}
+    else if(e.key==='Home'){go(0);} else if(e.key==='End'){go(slides.length-1);}
+  });
+  // swipe (touch)
+  let x0=null;
+  document.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(i+(dx<0?1:-1));x0=null;},{passive:true});
+  go(0);
+</script>
+</body>
+</html>

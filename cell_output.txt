@@ -1,29 +1,30 @@
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-README.md: 1.69kB [00:00, 4.32MB/s]
+README.md: 1.69kB [00:00, 4.99MB/s]
 Repo card metadata block was not found. Setting CardData to empty.
-test.tsv: 5.21MB [00:00, 142MB/s]
-Generating test split: 100%|████| 14267/14267 [00:00<00:00, 85736.99 examples/s]
-config.json: 100%|█████████████████████████████| 661/661 [00:00<00:00, 3.57MB/s]
-tokenizer_config.json: 7.30kB [00:00, 3.94MB/s]
-vocab.json: 2.78MB [00:00, 91.2MB/s]
-merges.txt: 1.67MB [00:00, 118MB/s]
-tokenizer.json: 7.03MB [00:00, 148MB/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+test.tsv: 5.21MB [00:00, 79.1MB/s]
+Generating test split: 100%|████| 14267/14267 [00:00<00:00, 83971.30 examples/s]
+[popqa_structured] context coverage: lead 150/150 (avg 3.1 passages), full-article 150/150 (avg 65.7 passages)
+config.json: 100%|█████████████████████████████| 661/661 [00:00<00:00, 3.09MB/s]
+tokenizer_config.json: 7.30kB [00:00, 25.8MB/s]
+vocab.json: 2.78MB [00:00, 47.2MB/s]
+merges.txt: 1.67MB [00:00, 119MB/s]
+tokenizer.json: 7.03MB [00:00, 146MB/s]
 `torch_dtype` is deprecated! Use `dtype` instead!
-model.safetensors.index.json: 35.6kB [00:00, 105MB/s]
+model.safetensors.index.json: 35.6kB [00:00, 67.5MB/s]
 Downloading (incomplete total...): 0.00B [00:00, ?B/s]
-Downloading (incomplete total...): 100%|████| 6.17G/6.17G [00:14<00:00, 525MB/s]
-Fetching 2 files: 100%|███████████████████████████| 2/2 [00:22<00:00, 11.29s/it]
-Download complete: 100%|████████████████████| 6.17G/6.17G [00:22<00:00, 272MB/s]
-Loading weights: 100%|█| 434/434 [00:02<00:00, 146.94it/s, Materializing param=m
-generation_config.json: 100%|██████████████████| 242/242 [00:00<00:00, 1.43MB/s]
-config.json: 1.09kB [00:00, 2.88MB/s]
-tokenizer_config.json: 1.28kB [00:00, 3.34MB/s]
-spm.model: 100%|███████████████████████████| 2.46M/2.46M [00:00<00:00, 11.5MB/s]
-tokenizer.json: 8.66MB [00:00, 165MB/s]
-added_tokens.json: 100%|██████████████████████| 23.0/23.0 [00:00<00:00, 120kB/s]
-special_tokens_map.json: 100%|█████████████████| 286/286 [00:00<00:00, 1.46MB/s]
-model.safetensors: 100%|█████████████████████| 369M/369M [00:08<00:00, 41.9MB/s]
-Loading weights: 100%|█| 202/202 [00:00<00:00, 1508.32it/s, Materializing param=
+Downloading (incomplete total...): 100%|████| 6.17G/6.17G [00:15<00:00, 389MB/s]
+Fetching 2 files: 100%|███████████████████████████| 2/2 [00:20<00:00, 10.37s/it]
+Download complete: 100%|████████████████████| 6.17G/6.17G [00:20<00:00, 297MB/s]
+Loading weights: 100%|█| 434/434 [00:03<00:00, 138.96it/s, Materializing param=m
+generation_config.json: 100%|██████████████████| 242/242 [00:00<00:00, 1.42MB/s]
+config.json: 1.09kB [00:00, 4.65MB/s]
+tokenizer_config.json: 1.28kB [00:00, 5.06MB/s]
+spm.model: 100%|███████████████████████████| 2.46M/2.46M [00:00<00:00, 5.97MB/s]
+tokenizer.json: 8.66MB [00:00, 95.3MB/s]
+added_tokens.json: 100%|██████████████████████| 23.0/23.0 [00:00<00:00, 165kB/s]
+special_tokens_map.json: 100%|█████████████████| 286/286 [00:00<00:00, 2.44MB/s]
+model.safetensors: 100%|█████████████████████| 369M/369M [00:10<00:00, 36.8MB/s]
+Loading weights: 100%|█| 202/202 [00:00<00:00, 1433.03it/s, Materializing param=
 DebertaV2ForSequenceClassification LOAD REPORT from: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
 Key                             | Status     |  | 
 --------------------------------+------------+--+-
@@ -31,13 +32,13 @@ deberta.embeddings.position_ids | UNEXPECTED |  |
 
 Notes:
 - UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-modules.json: 100%|████████████████████████████| 349/349 [00:00<00:00, 1.66MB/s]
-config_sentence_transformers.json: 100%|████████| 116/116 [00:00<00:00, 298kB/s]
-README.md: 10.5kB [00:00, 35.8MB/s]
-sentence_bert_config.json: 100%|██████████████| 53.0/53.0 [00:00<00:00, 395kB/s]
-config.json: 100%|█████████████████████████████| 612/612 [00:00<00:00, 4.33MB/s]
+modules.json: 100%|████████████████████████████| 349/349 [00:00<00:00, 1.64MB/s]
+config_sentence_transformers.json: 100%|████████| 116/116 [00:00<00:00, 278kB/s]
+README.md: 10.5kB [00:00, 23.8MB/s]
+sentence_bert_config.json: 100%|██████████████| 53.0/53.0 [00:00<00:00, 352kB/s]
+config.json: 100%|█████████████████████████████| 612/612 [00:00<00:00, 2.80MB/s]
 model.safetensors: 100%|████████████████████| 90.9M/90.9M [00:00<00:00, 112MB/s]
-Loading weights: 100%|█| 103/103 [00:00<00:00, 1694.52it/s, Materializing param=
+Loading weights: 100%|█| 103/103 [00:00<00:00, 1287.39it/s, Materializing param=
 BertModel LOAD REPORT from: sentence-transformers/all-MiniLM-L6-v2
 Key                     | Status     |  | 
 ------------------------+------------+--+-
@@ -45,11 +46,11 @@ embeddings.position_ids | UNEXPECTED |  |
 
 Notes:
 - UNEXPECTED	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-tokenizer_config.json: 100%|███████████████████| 350/350 [00:00<00:00, 1.73MB/s]
-vocab.txt: 232kB [00:00, 38.8MB/s]
-tokenizer.json: 466kB [00:00, 109MB/s]
-special_tokens_map.json: 100%|██████████████████| 112/112 [00:00<00:00, 783kB/s]
-config.json: 100%|██████████████████████████████| 190/190 [00:00<00:00, 938kB/s]
+tokenizer_config.json: 100%|███████████████████| 350/350 [00:00<00:00, 2.22MB/s]
+vocab.txt: 232kB [00:00, 10.2MB/s]
+tokenizer.json: 466kB [00:00, 34.6MB/s]
+special_tokens_map.json: 100%|██████████████████| 112/112 [00:00<00:00, 765kB/s]
+config.json: 100%|█████████████████████████████| 190/190 [00:00<00:00, 1.35MB/s]
     [FRANQ (fixed rule, no correction)] example 0/75...
 The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
     [FRANQ (fixed rule, no correction)] example 10/75...
@@ -59,11 +60,14 @@ The following generation flags are not valid and may be ignored: ['temperature',
     [FRANQ (fixed rule, no correction)] example 50/75...
     [FRANQ (fixed rule, no correction)] example 60/75...
     [FRANQ (fixed rule, no correction)] example 70/75...
-[01] FRANQ (fixed rule, no correction)  (dataset=popqa_structured, n_facts=277)
-     AUROC=0.546  PRR=0.272  ECE=0.066
-     factual_acc: 0.072 -> 0.072   correction_success=0.000   correction_regret=0.000
-     flagged=276  corrected=0
+[01] FRANQ (fixed rule, no correction)  (dataset=popqa_structured, n_facts=234)
+     AUROC=0.737  PRR=0.422  ECE=0.602
+     factual_acc: 0.632 -> 0.632   correction_success=0.000   correction_regret=0.000
+     flagged=233  corrected=0
 Repo card metadata block was not found. Setting CardData to empty.
+[popqa_structured] context coverage: lead 150/150 (avg 3.1 passages), full-article 150/150 (avg 65.7 passages)
+/usr/local/lib/python3.12/dist-packages/sklearn/calibration.py:333: UserWarning: The `cv='prefit'` option is deprecated in 1.6 and will be removed in 1.8. You can use CalibratedClassifierCV(FrozenEstimator(estimator)) instead.
+  warnings.warn(
     [+ Learned router (Pillar 2)] example 0/75...
     [+ Learned router (Pillar 2)] example 10/75...
     [+ Learned router (Pillar 2)] example 20/75...
@@ -72,11 +76,14 @@ Repo card metadata block was not found. Setting CardData to empty.
     [+ Learned router (Pillar 2)] example 50/75...
     [+ Learned router (Pillar 2)] example 60/75...
     [+ Learned router (Pillar 2)] example 70/75...
-[02] + Learned router (Pillar 2)  (dataset=popqa_structured, n_facts=277)
-     AUROC=0.767  PRR=0.426  ECE=0.220
-     factual_acc: 0.072 -> 0.072   correction_success=0.000   correction_regret=0.000
-     flagged=246  corrected=0
+[02] + Learned router (Pillar 2)  (dataset=popqa_structured, n_facts=234)
+     AUROC=0.745  PRR=0.481  ECE=0.057
+     factual_acc: 0.632 -> 0.632   correction_success=0.000   correction_regret=0.000
+     flagged=94  corrected=0
 Repo card metadata block was not found. Setting CardData to empty.
+[popqa_structured] context coverage: lead 150/150 (avg 3.1 passages), full-article 150/150 (avg 65.7 passages)
+/usr/local/lib/python3.12/dist-packages/sklearn/calibration.py:333: UserWarning: The `cv='prefit'` option is deprecated in 1.6 and will be removed in 1.8. You can use CalibratedClassifierCV(FrozenEstimator(estimator)) instead.
+  warnings.warn(
     [+ Graph features (Pillar 1)] example 0/75...
     [+ Graph features (Pillar 1)] example 10/75...
     [+ Graph features (Pillar 1)] example 20/75...
@@ -85,11 +92,14 @@ Repo card metadata block was not found. Setting CardData to empty.
     [+ Graph features (Pillar 1)] example 50/75...
     [+ Graph features (Pillar 1)] example 60/75...
     [+ Graph features (Pillar 1)] example 70/75...
-[03] + Graph features (Pillar 1)  (dataset=popqa_structured, n_facts=277)
-     AUROC=0.780  PRR=0.431  ECE=0.242
-     factual_acc: 0.072 -> 0.072   correction_success=0.000   correction_regret=0.000
-     flagged=252  corrected=0
+[03] + Graph features (Pillar 1)  (dataset=popqa_structured, n_facts=234)
+     AUROC=0.764  PRR=0.543  ECE=0.026
+     factual_acc: 0.632 -> 0.632   correction_success=0.000   correction_regret=0.000
+     flagged=115  corrected=0
 Repo card metadata block was not found. Setting CardData to empty.
+[popqa_structured] context coverage: lead 150/150 (avg 3.1 passages), full-article 150/150 (avg 65.7 passages)
+/usr/local/lib/python3.12/dist-packages/sklearn/calibration.py:333: UserWarning: The `cv='prefit'` option is deprecated in 1.6 and will be removed in 1.8. You can use CalibratedClassifierCV(FrozenEstimator(estimator)) instead.
+  warnings.warn(
     [+ Correction + regret (Pillar 3)] example 0/75...
     [+ Correction + regret (Pillar 3)] example 10/75...
     [+ Correction + regret (Pillar 3)] example 20/75...
@@ -98,31 +108,45 @@ Repo card metadata block was not found. Setting CardData to empty.
     [+ Correction + regret (Pillar 3)] example 50/75...
     [+ Correction + regret (Pillar 3)] example 60/75...
     [+ Correction + regret (Pillar 3)] example 70/75...
-[04] + Correction + regret (Pillar 3)  (dataset=popqa_structured, n_facts=277)
-     AUROC=0.780  PRR=0.431  ECE=0.242
-     factual_acc: 0.072 -> 0.072   correction_success=0.000   correction_regret=0.000
-     flagged=252  corrected=0
+[04] + Correction + regret (Pillar 3)  (dataset=popqa_structured, n_facts=234)
+     AUROC=0.764  PRR=0.543  ECE=0.026
+     factual_acc: 0.632 -> 0.658   correction_success=0.093   correction_regret=0.014
+     flagged=115  corrected=20
 Repo card metadata block was not found. Setting CardData to empty.
-    [Full system] example 0/75...
-    [Full system] example 10/75...
-    [Full system] example 20/75...
-    [Full system] example 30/75...
-    [Full system] example 40/75...
-    [Full system] example 50/75...
-    [Full system] example 60/75...
-    [Full system] example 70/75...
-[05] Correction-regret analysis
-     full system on popqa_structured: regret = 0.000
-     controlled contrast -> safety-checked: 0.000   reckless: 1.000
+[popqa_structured] context coverage: lead 150/150 (avg 3.1 passages), full-article 150/150 (avg 65.7 passages)
+/usr/local/lib/python3.12/dist-packages/sklearn/calibration.py:333: UserWarning: The `cv='prefit'` option is deprecated in 1.6 and will be removed in 1.8. You can use CalibratedClassifierCV(FrozenEstimator(estimator)) instead.
+  warnings.warn(
+    [Full system (safety-checked)] example 0/75...
+    [Full system (safety-checked)] example 10/75...
+    [Full system (safety-checked)] example 20/75...
+    [Full system (safety-checked)] example 30/75...
+    [Full system (safety-checked)] example 40/75...
+    [Full system (safety-checked)] example 50/75...
+    [Full system (safety-checked)] example 60/75...
+    [Full system (safety-checked)] example 70/75...
+/usr/local/lib/python3.12/dist-packages/sklearn/calibration.py:333: UserWarning: The `cv='prefit'` option is deprecated in 1.6 and will be removed in 1.8. You can use CalibratedClassifierCV(FrozenEstimator(estimator)) instead.
+  warnings.warn(
+    [Full system (reckless)] example 0/75...
+    [Full system (reckless)] example 10/75...
+    [Full system (reckless)] example 20/75...
+    [Full system (reckless)] example 30/75...
+    [Full system (reckless)] example 40/75...
+    [Full system (reckless)] example 50/75...
+    [Full system (reckless)] example 60/75...
+    [Full system (reckless)] example 70/75...
+[05] Correction-regret analysis (measured on real data)
+     safety-checked: regret=0.014  success=0.093  acc_after=0.658  corrected=20
+     reckless:       regret=0.135  success=0.116  acc_after=0.590  corrected=76
+     formula anchor -> safe: 0.000   reckless: 1.000
      wrote /kaggle/working/results_popqa/tables/regret_analysis.csv
 
 ================ ABLATION TABLE ================
 condition      AUROC     PRR     ECE   acc_b   acc_a  cor_suc  regret
 ---------------------------------------------------------------------
-B0_franq       0.546   0.272   0.066   0.072   0.072    0.000   0.000
-A1_router      0.767   0.426   0.220   0.072   0.072    0.000   0.000
-A2_graph       0.780   0.431   0.242   0.072   0.072    0.000   0.000
-A3_full        0.780   0.431   0.242   0.072   0.072    0.000   0.000
+B0_franq       0.737   0.422   0.602   0.632   0.632    0.000   0.000
+A1_router      0.745   0.481   0.057   0.632   0.632    0.000   0.000
+A2_graph       0.764   0.543   0.026   0.632   0.632    0.000   0.000
+A3_full        0.764   0.543   0.026   0.632   0.658    0.093   0.014
 
 Wrote /kaggle/working/results_popqa/tables/ablation.csv
      figure: /kaggle/working/results_popqa/figures/fig_auroc.png

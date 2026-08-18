@@ -1,0 +1,5 @@
+scenario,correction_regret,correction_success,factual_acc_after,n_corrected,note
+safety_checked,0.014,0.093,0.658,20,measured on popqa_structured
+reckless,0.135,0.116,0.590,76,measured on popqa_structured
+unit_check_safe,0.000,,,,formula anchor: correct fact untouched
+unit_check_reckless,1.000,,,,formula anchor: correct fact overwritten

@@ -1,0 +1,2 @@
+short_name,condition,n_examples,n_facts,auroc,prr,ece,factual_acc_before,factual_acc_after,correction_success,correction_regret,n_flagged,n_corrected
+A2_graph,+ Graph features (Pillar 1),75,234,0.7635135135135136,0.5434353489968875,0.02559786394267916,0.6324786324786325,0.6324786324786325,0.0,0.0,115,0

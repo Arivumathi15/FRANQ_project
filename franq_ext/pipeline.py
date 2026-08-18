@@ -87,8 +87,9 @@ class Pipeline:
         facts, graph, retriever = self.compute_signals(example)
 
         # Pillar 2: route each fact (calibrated learned router, or FRANQ fixed rule).
+        # Flagging uses the router threshold (generous), NOT the correction acceptance bar.
         self.router.route_facts(
-            facts, graph, flag_threshold=self.cfg.correction.flag_threshold
+            facts, graph, flag_threshold=self.cfg.router.flag_threshold
         )
 
         # Snapshot correctness state before touching anything (for correction-regret).

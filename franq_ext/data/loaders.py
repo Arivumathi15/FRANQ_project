@@ -78,13 +78,18 @@ def load_popqa_structured(n: int | None = 300, seed: int = 13,
     ds = load_dataset("akariasai/PopQA", split="test")
     ds = ds.shuffle(seed=seed)
 
-    # Group ALL rows by subject first (cheap), then filter to multi-attribute subjects.
+    # Group by the DISAMBIGUATED Wikipedia title, not the bare surface name. PopQA reuses a
+    # surface name (e.g. "Baby") across several distinct entities (a novel, a song, a film),
+    # each with its own s_wiki_title. Grouping by `subj` conflated them into one incoherent
+    # entity AND made the assigned title order-dependent (so the bundled context cache missed).
+    # Grouping by title gives one real article per group, coherent facts, and a stable key.
     groups: dict[str, dict] = {}
     for r in ds:
         subj = str(r.get("subj", "")).strip()
         prop = str(r.get("prop", "")).strip()
         obj = str(r.get("obj", "")).strip()
-        if not (subj and prop and obj):
+        title = str(r.get("s_wiki_title", subj) or subj).strip()
+        if not (subj and prop and obj and title):
             continue
         # PopQA ships `possible_answers` (a JSON list of acceptable aliases). Fold them into
         # the gold so lenient matching can accept any valid surface form.
@@ -96,25 +101,26 @@ def load_popqa_structured(n: int | None = 300, seed: int = 13,
             except (json.JSONDecodeError, TypeError):
                 pass
         gold_value = "||".join(dict.fromkeys(a.strip() for a in aliases if a.strip()))
-        g = groups.setdefault(subj, {"title": str(r.get("s_wiki_title", subj) or subj), "facts": {}})
-        g["facts"][prop] = gold_value  # one value (with aliases) per (subject, property)
+        g = groups.setdefault(title, {"subj": subj, "facts": {}})
+        g["facts"][prop] = gold_value  # one value (with aliases) per (title, property)
 
-    # Keep only multi-attribute subjects, then take the first n.
-    multi = [(s, g) for s, g in groups.items() if len(g["facts"]) >= min_attributes]
+    # Keep only multi-attribute entities, then take the first n.
+    multi = [(t, g) for t, g in groups.items() if len(g["facts"]) >= min_attributes]
     if n is not None:
         multi = multi[:n]
 
     examples = []
     n_with_ctx = n_with_corr = 0
-    for i, (subj, g) in enumerate(multi):
+    for i, (title, g) in enumerate(multi):
+        subj = g["subj"]
         gold_facts = [(subj, prop, obj) for prop, obj in g["facts"].items()]
         contexts: list[str] = []
         correction_contexts: list[str] = []
         if with_contexts:
             from franq_ext.data.wiki_context import get_context, get_full_context
             # Generation sees the short lead; correction (Pillar 3) may search the full article.
-            contexts = get_context(g["title"])
-            correction_contexts = get_full_context(g["title"])
+            contexts = get_context(title)
+            correction_contexts = get_full_context(title)
         n_with_ctx += 1 if contexts else 0
         n_with_corr += 1 if correction_contexts else 0
         examples.append(
