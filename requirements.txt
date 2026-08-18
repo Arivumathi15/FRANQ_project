@@ -3,6 +3,9 @@ numpy>=1.24
 scikit-learn>=1.3
 networkx>=3.0
 
+# Interactive UI demo (offline, CPU-only):  streamlit run app.py
+streamlit>=1.22
+
 # --- Heavy deps below: only needed for the REAL experiment runs on Colab/Kaggle GPU. ---
 # Install with:  pip install -r requirements.txt  &&  pip install .[full]
 # torch>=2.1
